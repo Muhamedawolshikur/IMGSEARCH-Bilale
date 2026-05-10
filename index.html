@@ -3,37 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO-SEARCH | Intelligence</title>
+    <title>БILДLΞ | Search Protocol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;500;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Grotesk:wght@300;500;700&display=swap');
 
         :root {
-            --accent: #00ff88;
-            --bg: #08080a;
+            --neon: #00ffcc;
+            --dark: #050505;
         }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--dark);
             color: white;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+            background-image: radial-gradient(circle at 20% 30%, #00ffcc11 0%, transparent 40%),
+                              radial-gradient(circle at 80% 70%, #9d00ff11 0%, transparent 40%);
+            min-height: 100vh;
         }
 
-        .header-font { font-family: 'Syncopate', sans-serif; }
+        .neo-font { font-family: 'Syncopate', sans-serif; }
 
-        /* Glassmorphism Sidebar Effect */
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .glass-ui {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 24px;
         }
 
-        /* Neon Glow Button */
-        .btn-neon {
-            background: var(--accent);
-            color: black;
+        .neon-glow:focus {
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+            border-color: var(--neon);
+        }
+
+        .image-card {
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+
+        .image-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 255, 204, 0.2);
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="max-w-7xl mx-auto flex justify-between items-center mb-16">
+        <div class="flex items-center space-x-3">
+            <div class="h-10 w-10 bg-[#00ffcc] rounded-bl-xl rounded-tr-xl flex items-center justify-center shadow-[0_0_15px_#00ffcc]">
+                <i class="fas fa-cipher text-black font-bold"></i>
+            </div>
+            <span class="neo-font text-xl tracking-tighter">БILДLΞ<span class="text-[#00ffcc]">.AI</span></span>
+        </div>
+        
+        <a href="https://t.me/Bilal_Cipher" target="_blank" class="glass-ui px-5 py-2 flex items-center space-x-3 hover:bg-[#00ffcc11] transition-all">
+            <span class="text-xs font-bold text-[#00ffcc]">@Bilal_Cipher</span>
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+    </header>
+
+    <main class="max-w-4xl mx-auto text-center mb-20">
+        <h1 class="neo-font text-5xl md:text-7xl mb-8 leading-tight">IMAGE <br> <span class="text-transparent" style="-webkit-text-stroke: 1px #00ffcc;">PROTOCOL</span></h1>
+        
+        <div class="relative group">
+            <div class="absolute -inset-1 bg-[#00ffcc] rounded-3xl blur opacity-10 group-hover:opacity-30 transition duration-1000"></div>
+            <div class="relative glass-ui p-2 flex flex-col md:flex-row gap-2">
+                <input type="text" id="searchInput" placeholder="Analyze query (e.g. Ethiopia Landscape)..." 
+                    class="w-full bg-transparent px-6 py-4 outline-none text-lg neon-glow rounded-xl">
+                <button onclick="searchImages()" class="bg-[#00ffcc] text-black font-black px-10 py-4 rounded-xl neo-font text-xs hover:bg-white transition-all transform active:scale-95">
+                    EXECUTE
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="loader" class="hidden max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="h-64 shimmer rounded-3xl"></div>
+        <div class="h-64 shimmer rounded-3xl"></div>
+        <div class="h-64 shimmer rounded-3xl"></div>
+        <div class="h-64 shimmer rounded-3xl"></div>
+    </div>
+
+    <div id="resultsGrid" class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        </div>
+
+    <footer class="fixed bottom-6 left-6 z-50">
+        <div class="glass-ui px-6 py-4 border-l-4 border-[#00ffcc]">
+            <div class="flex items-center space-x-3">
+                <div class="text-left">
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Lead Architect</p>
+                    <p class="text-lg font-bold neo-font">БILДLΞ</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        async function searchImages() {
+            const query = document.getElementById('searchInput').value;
+            const grid = document.getElementById('resultsGrid');
+            const loader = document.getElementById('loader');
+
+            if (!query) return;
+
+            grid.innerHTML = '';
+            loader.classList.remove('hidden');
+
+            // API URL
+            const apiUrl = `https://microsoftdeepsearch.anshppt19.workers.dev/?search=${encodeURIComponent(query)}&state=image`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                loader.classList.add('hidden');
+
+                if (data.status === "success" && data.images.results.length > 0) {
+                    data.images.results.forEach((imgUrl, index) => {
+                        const cleanUrl = imgUrl.replace(/&amp;/g, '&');
+                        
+                        const card = `
+                            <div class="image-card glass-ui p-2 overflow-hidden group">
+                                <div class="relative h-64 overflow-hidden rounded-2xl">
+                                    <img src="${cleanUrl}" class="w-full h-full object-cover transition-transform duration-700" 
+                                         onerror="this.src='https://via.placeholder.com/400x400/050505/00ffcc?text=IMAGE+NOT+SYNCED'">
+                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <a href="${cleanUrl}" target="_blank" class="bg-[#00ffcc] text-black p-3 rounded-full hover:scale-110 transition">
+                                            <i class="fas fa-expand-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="mt-3 p-2">
+                                    <p class="text-[10px] text-gray-500 font-bold">NODE: B-CIPHER-00${index + 1}</p>
+                                </div>
+                            </div>
+                        `;
+                        grid.innerHTML += card;
+                    });
+                } else {
+                    grid.innerHTML = `<p class="col-span-full text-center text-[#ff4444] neo-font py-10">ERROR: NO SPECTRAL DATA FOUND</p>`;
+                }
+            } catch (error) {
+                loader.classList.add('hidden');
+                grid.innerHTML = `<p class="col-span-full text-center text-[#ff4444] neo-font py-10">CONNECTION FAILED: RETRY PROTOCOL</p>`;
+            }
+        }
+
+        // Enter key support
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchImages();
+        });
+    </script>
+</body>
+</html>
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
             transition: 0.4s;
         }
