@@ -3,37 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>БILДLΞ | Search Protocol</title>
+    <title>БILДLΞ | AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #050505; color: white; font-family: sans-serif; }
+        .neon-text { color: #00ffcc; text-shadow: 0 0 10px #00ffcc55; font-weight: bold; }
+        .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(0,255,204,0.2); border-radius: 15px; }
+        .btn { background: #00ffcc; color: black; font-weight: bold; padding: 10px 20px; border-radius: 10px; }
+    </style>
 </head>
-<body>
+<body class="p-5">
 
-    <header class="p-6 max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="h-8 w-8 bg-[#00ffcc] rounded flex items-center justify-center">
-                <i class="fas fa-bolt text-black text-sm"></i>
-            </div>
-            <span class="neo-font text-lg tracking-widest text-[#00ffcc]">БILДLΞ</span>
-        </div>
-        <a href="https://t.me/Bilal_Cipher" target="_blank" class="glass-panel px-4 py-2 text-xs font-bold hover:text-[#00ffcc] transition">
-            <i class="fab fa-telegram-plane mr-2"></i>@Bilal_Cipher
-        </a>
-    </header>
+    <div class="flex justify-between items-center mb-10">
+        <h1 class="neon-text text-xl">БILДLΞ AI</h1>
+        <a href="https://t.me/Bilal_Cipher" class="text-xs glass p-2">@Bilal_Cipher</a>
+    </div>
 
-    <section class="mt-16 px-4 text-center">
-        <h1 class="neo-font text-4xl md:text-6xl mb-10 tracking-tighter uppercase">
-            Image <span class="text-transparent" style="-webkit-text-stroke: 1px #00ffcc;">Sync</span>
-        </h1>
-        <div class="max-w-2xl mx-auto glass-panel p-2 flex gap-2">
-            <input type="text" id="searchInput" placeholder="Analyze query..." 
-                class="w-full bg-transparent px-5 py-3 outline-none text-white">
-            <button onclick="searchImages()" class="search-btn px-8 py-3 rounded-xl font-bold neo-font text-[10px]">
-                EXECUTE
-            </button>
+    <div class="max-w-xl mx-auto mb-10">
+        <div class="glass p-2 flex gap-2">
+            <input type="text" id="q" placeholder="Search images..." class="w-full bg-transparent p-2 outline-none">
+            <button onclick="run()" class="btn">EXECUTE</button>
         </div>
-    </section>
+    </div>
+
+    <div id="res" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+
+    <div class="fixed bottom-5 left-5 glass p-4 border-l-4 border-[#00ffcc]">
+        <p class="text-[10px] opacity-50">ARCHITECT</p>
+        <p class="neon-text text-lg">БILДLΞ 😎</p>
+    </div>
+
+    <script>
+        async function run() {
+            const q = document.getElementById('q').value;
+            const res = document.getElementById('res');
+            if(!q) return;
+            
+            res.innerHTML = '<p class="col-span-full text-center animate-pulse">SEARCHING...</p>';
+            
+            try {
+                // Proxy ተጠቅመን ዳታው እንዲመጣ እናደርጋለን
+                const url = `https://microsoftdeepsearch.anshppt19.workers.dev/?search=${encodeURIComponent(q)}&state=image`;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                
+                const response = await fetch(proxyUrl);
+                const json = await response.json();
+                const data = JSON.parse(json.contents);
+
+                res.innerHTML = '';
+                data.images.results.forEach(img => {
+                    const cleanUrl = img.replace(/&amp;/g, '&');
+                    res.innerHTML += `
+                        <div class="glass p-1">
+                            <img src="${cleanUrl}" class="rounded-lg h-40 w-full object-cover">
+                        </div>`;
+                });
+            } catch (e) {
+                res.innerHTML = '<p class="col-span-full text-center text-red-500">ERROR! TRY AGAIN</p>';
+            }
+        }
+    </script>
+</body>
+</html>
 
     <main class="max-w-7xl mx-auto mt-16 px-6">
         <div id="loader" class="hidden grid grid-cols-2 md:grid-cols-4 gap-4">
