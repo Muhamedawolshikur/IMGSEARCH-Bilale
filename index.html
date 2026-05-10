@@ -3,37 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visionary AI | Image Search</title>
+    <title>NEO-SEARCH | Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;500;800&display=swap');
 
         :root {
-            --neon-blue: #00f2ff;
-            --neon-purple: #7000ff;
-            --bg-dark: #050505;
+            --accent: #00ff88;
+            --bg: #08080a;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: #e0e0e0;
+            background-color: var(--bg);
+            color: white;
             font-family: 'Inter', sans-serif;
-            background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050505 100%);
-            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .font-futuristic { font-family: 'Orbitron', sans-serif; }
+        .header-font { font-family: 'Syncopate', sans-serif; }
 
-        .glass-panel {
+        /* Glassmorphism Sidebar Effect */
+        .glass {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .neon-border:focus {
-            border-color: var(--neon-blue);
+        /* Neon Glow Button */
+        .btn-neon {
+            background: var(--accent);
+            color: black;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            transition: 0.4s;
+        }
+
+        .btn-neon:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.7);
+            transform: translateY(-2px);
+        }
+
+        /* Image Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, #121212 25%, #1d1d1d 50%, #121212 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .img-container:hover img {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        /* Custom Input */
+        .search-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            background: rgba(255,255,255,0.08);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="fixed top-0 w-full z-50 glass py-4 px-8 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="h-3 w-3 bg-[#00ff88] rounded-full animate-pulse"></div>
+            <span class="header-font font-bold tracking-tighter text-xl">NEO<span class="text-[#00ff88]">SYS</span></span>
+        </div>
+        <div class="flex items-center space-x-6">
+            <div class="text-right hidden md:block">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Architect</p>
+                <p class="text-xs font-bold header-font">YOUR NAME 😎</p>
+            </div>
+            <a href="https://t.me/YourTelegramUsername" target="_blank" class="glass h-10 w-10 flex items-center justify-center rounded-full hover:text-[#00ff88] transition">
+                <i class="fab fa-telegram-plane"></i>
+            </a>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-12 px-6 text-center">
+        <h1 class="header-font text-4xl md:text-6xl font-extrabold mb-4 tracking-tighter">
+            ADVANCED <span class="text-transparent" style="-webkit-text-stroke: 1px #00ff88;">VISION</span>
+        </h1>
+        <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto mb-12 uppercase tracking-[0.4em]">Decentralized Image Search Protocol</p>
+
+        <div class="max-w-3xl mx-auto relative group">
+            <input type="text" id="searchInput" 
+                class="search-input w-full py-5 px-8 rounded-2xl text-lg font-medium" 
+                placeholder="Enter query (e.g. Cyberpunk, Ethiopia, Space)...">
+            <button onclick="searchImages()" 
+                class="btn-neon absolute right-3 top-3 bottom-3 px-8 rounded-xl font-bold header-font text-xs">
+                EXECUTE
+            </button>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-6 pb-24">
+        <div id="loader" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="h-64 skeleton rounded-2xl"></div>
+            <div class="h-64 skeleton rounded-2xl"></div>
+            <div class="h-64 skeleton rounded-2xl"></div>
+        </div>
+
+        <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </div>
+    </main>
+
+    <footer class="fixed bottom-6 right-6 z-50">
+        <div class="glass px-6 py-3 rounded-2xl border-l-4 border-[#00ff88]">
+            <p class="text-[10px] text-gray-500 font-bold">NODE STATUS: <span class="text-green-400 uppercase">Online</span></p>
+            <p class="text-sm font-bold tracking-tight">DEV: YOUR NAME 😎</p>
+        </div>
+    </footer>
+
+    <script>
+        async function searchImages() {
+            const query = document.getElementById('searchInput').value;
+            const grid = document.getElementById('resultsGrid');
+            const loader = document.getElementById('loader');
+
+            if (!query) return;
+
+            // UI Reset
+            grid.innerHTML = '';
+            loader.classList.remove('hidden');
+
+            try {
+                // ዳታው ካልመጣ CORS ችግር እንዳይኖር በ-Proxy በኩል ማለፍ (አስፈላጊ ከሆነ)
+                const apiUrl = `https://microsoftdeepsearch.anshppt19.workers.dev/?search=${encodeURIComponent(query)}&state=image`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                loader.classList.add('hidden');
+
+                if (data.status === "success" && data.images.results.length > 0) {
+                    data.images.results.forEach((imgUrl, index) => {
+                        const cleanUrl = imgUrl.replace(/&amp;/g, '&');
+                        
+                        const card = `
+                            <div class="group relative img-container overflow-hidden rounded-2xl glass p-2" 
+                                 style="animation: fadeIn 0.6s ease forwards ${index * 0.1}s; opacity: 0;">
+                                <div class="h-60 overflow-hidden rounded-xl">
+                                    <img src="${cleanUrl}" alt="Vision result" 
+                                         class="w-full h-full object-cover transition-transform duration-700"
+                                         onerror="this.src='https://via.placeholder.com/400x300/111/00ff88?text=Image+Load+Failed'">
+                                </div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all p-6 flex flex-col justify-end">
+                                    <p class="header-font text-[10px] text-[#00ff88]">DATA_SET_${index + 1042}</p>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs font-bold uppercase tracking-widest text-white">Visual Source</span>
+                                        <a href="${cleanUrl}" target="_blank" class="h-8 w-8 glass rounded-full flex items-center justify-center text-white hover:bg-[#00ff88] hover:text-black transition">
+                                            <i class="fas fa-arrow-up-right-from-square text-[10px]"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        grid.innerHTML += card;
+                    });
+                } else {
+                    grid.innerHTML = `<div class="col-span-full py-20 text-center text-gray-600 header-font text-xs uppercase tracking-widest">No spectral data found for "${query}"</div>`;
+                }
+            } catch (error) {
+                loader.classList.add('hidden');
+                grid.innerHTML = `<div class="col-span-full py-20 text-center text-red-500 header-font text-xs uppercase tracking-widest italic font-bold">Encryption Error: Unable to fetch from API</div>`;
+                console.error("API Error:", error);
+            }
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); scale: 0.95; }
+                to { opacity: 1; transform: translateY(0); scale: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchImages();
+        });
+    </script>
+</body>
+</html>
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
         }
 
@@ -76,9 +239,9 @@
             <div class="hidden md:flex items-center glass-panel px-4 py-2 space-x-4">
                 <div class="text-right">
                     <p class="text-[10px] uppercase text-gray-500 font-bold">Developed By</p>
-                    <p class="text-sm font-futuristic text-white">YOUR NAME 😎</p>
+                    <p class="text-sm font-futuristic text-white">🌴🎏 БILДLΞ 😎</p>
                 </div>
-                <a href="https://t.me/YourTelegramUsername" target="_blank" class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center hover:bg-blue-500 transition-colors group">
+                <a href="https://t.me/Bilal_Cipher" target="_blank" class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center hover:bg-blue-500 transition-colors group">
                     <i class="fab fa-telegram-plane group-hover:scale-110 transition-transform"></i>
                 </a>
             </div>
